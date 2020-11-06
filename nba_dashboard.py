@@ -60,7 +60,7 @@ app.layout = html.Div(
         html.Div([
             dcc.Tabs(id="tabs", children=[
 
-                dcc.Tab(label='Player Dashboard', children=[
+                dcc.Tab(label='Player View Dashboard', children=[
 
                     html.Br(),
                     html.Br(),
@@ -87,9 +87,11 @@ app.layout = html.Div(
                     dbc.Row([
 
                         dbc.Col(
+
+                            # FIELD GOAL PERCENTAGE CARD
                             dbc.Card(
                                 [
-                                    html.H2(id='FieldGoalPercentage'),
+                                    html.H2(id='FieldGoalPercentage_card'),
                                     html.P("Field Goal Percentage", className="card-text"),
                                 ],
                                 body=True,
@@ -100,9 +102,11 @@ app.layout = html.Div(
                         ),
 
                         dbc.Col(
+
+                            # THREE POINT PERCENTAGE CARD
                             dbc.Card(
                                 [
-                                    html.H2(id='ThreePointPercentage'),
+                                    html.H2(id='ThreePointPercentage_card'),
                                     html.P("Three Point Percentage", className="card-text")
                                 ],
                                 body=True,
@@ -112,9 +116,11 @@ app.layout = html.Div(
                             width=4
                         ),
                         dbc.Col(
+
+                            # FREE THROW PERCENTAGE CARD
                             dbc.Card(
                                 [
-                                    html.H2(id='FreeThrowPercentage'),
+                                    html.H2(id='FreeThrowPercentage_card'),
                                     html.P("Free Throw Percentage", className="card-text"),
                                 ],
                                 body=True,
@@ -132,7 +138,7 @@ app.layout = html.Div(
                         dbc.Col(
                             dbc.Card(
                                 [
-                                    html.H2(id='Rebounds'),
+                                    html.H2(id='Rebounds_card'),
                                     html.P("Rebounds Per Game", className="card-text"),
                                 ],
                                 body=True,
@@ -145,7 +151,7 @@ app.layout = html.Div(
                         dbc.Col(
                             dbc.Card(
                                 [
-                                    html.H2(id='Assists'),
+                                    html.H2(id='Assists_card'),
                                     html.P("Assists Per Game", className="card-text")
                                 ],
                                 body=True,
@@ -157,7 +163,7 @@ app.layout = html.Div(
                         dbc.Col(
                             dbc.Card(
                                 [
-                                    html.H2(id='Steals'),
+                                    html.H2(id='Steals_card'),
                                     html.P("Steals Per Game", className="card-text"),
                                 ],
                                 body=True,
@@ -175,7 +181,7 @@ app.layout = html.Div(
                         dbc.Col(
                             dbc.Card(
                                 [
-                                    html.H2(id='Blocks'),
+                                    html.H2(id='Blocks_card'),
                                     html.P("Blocks Per Game", className="card-text"),
                                 ],
                                 body=True,
@@ -188,7 +194,7 @@ app.layout = html.Div(
                         dbc.Col(
                             dbc.Card(
                                 [
-                                    html.H2(id='Turnovers'),
+                                    html.H2(id='Turnovers_card'),
                                     html.P("Turnovers Per Game", className="card-text")
                                 ],
                                 body=True,
@@ -200,7 +206,7 @@ app.layout = html.Div(
                         dbc.Col(
                             dbc.Card(
                                 [
-                                    html.H2(id='Points'),
+                                    html.H2(id='Points_card'),
                                     html.P("Points Per Game", className="card-text"),
                                 ],
                                 body=True,
@@ -216,7 +222,7 @@ app.layout = html.Div(
 
                     # HEADER FOR CATEGORIES OVER THE YEARS
                     html.H4(children=
-                        'Fantasy Per Game Category Stats Year to Year',
+                        'Fantasy Per Game Category Stats (Year to Year)',
                         style={"text-align": "center"}
                     ),
 
@@ -320,6 +326,160 @@ app.layout = html.Div(
 
 
 # CALLBACK SECTION
+
+# CARDS ROW 1
+
+
+# Callback for the FIELD GOAL PERCENTAGE
+@app.callback(
+    # output value for the callback
+    Output('FieldGoalPercentage_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+
+    df_fgp = df[df['Player'] == player]
+    df_fgp = df_fgp[df_fgp['year'] == year]
+    fgp = df_fgp['FG%'].tolist()
+    fgp = fgp[0]*100
+
+    return ' {0:.2f}% '.format(fgp)
+
+# Callback for the THREE POINT PERCENTAGE
+@app.callback(
+    # output value for the callback
+    Output('ThreePointPercentage_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+
+    df_3pp = df[df['Player'] == player]
+    df_3pp = df_3pp[df_3pp['year'] == year]
+    tpp = df_3pp['3P%'].tolist()
+    tpp = tpp[0]*100
+
+    return ' {0:.2f}% '.format(tpp)
+
+
+# Callback for the FREE THROW PERCENTAGE
+@app.callback(
+    # output value for the callback
+    Output('FreeThrowPercentage_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+
+    df_ftp = df[df['Player'] == player]
+    df_ftp = df_ftp[df_ftp['year'] == year]
+    stat = df_ftp['FT%'].tolist()
+    stat = stat[0]*100
+
+    return ' {0:.2f}% '.format(stat)
+
+
+# CARDS ROW 2
+
+# Callback for the REBOUNDS
+@app.callback(
+    # output value for the callback
+    Output('Rebounds_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+
+    df_reb = df[df['Player'] == player]
+    df_reb = df_reb[df_reb['year'] == year]
+    stat = df_reb['TRB'].tolist()
+    stat = stat[0]
+
+    return ' {0:.2f} '.format(stat)
+
+# Callback for the ASSISTS
+@app.callback(
+    # output value for the callback
+    Output('Assists_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+
+    df_ast = df[df['Player'] == player]
+    df_ast = df_ast[df_ast['year'] == year]
+    stat = df_ast['AST'].tolist()
+    stat = stat[0]
+
+    return ' {0:.2f} '.format(stat)
+
+
+# Callback for the STEALS
+@app.callback(
+    # output value for the callback
+    Output('Steals_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+    df_stl = df[df['Player'] == player]
+    df_stl = df_stl[df_stl['year'] == year]
+    stat = df_stl['STL'].tolist()
+    stat = stat[0]
+
+    return ' {0:.2f} '.format(stat)
+
+
+# CARDS ROW 3
+
+# Callback for the BLOCKS
+@app.callback(
+    # output value for the callback
+    Output('Blocks_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+    df_blk = df[df['Player'] == player]
+    df_blk = df_blk[df_blk['year'] == year]
+    stat = df_blk['BLK'].tolist()
+    stat = stat[0]
+
+    return ' {0:.2f} '.format(stat)
+
+# Callback for the TURNOVERS
+@app.callback(
+    # output value for the callback
+    Output('Turnovers_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+    df_tov = df[df['Player'] == player]
+    df_tov = df_tov[df_tov['year'] == year]
+    stat = df_tov['TOV'].tolist()
+    stat = stat[0]
+
+    return ' {0:.2f} '.format(stat)
+
+
+# Callback for the POINTS
+@app.callback(
+    # output value for the callback
+    Output('Points_card', 'children'),
+    # Inputs
+    [Input('player_input', 'value'),
+     Input('year_input', 'value')])
+def update_fig(player, year):
+    df_pts = df[df['Player'] == player]
+    df_pts = df_pts[df_pts['year'] == year]
+    stat = df_pts['PTS'].tolist()
+    stat = stat[0]
+
+    return ' {0:.2f} '.format(stat)
+
+
 
 # Callback for the PLAYER CATEGORIES OVER YEARS FIGURE
 @app.callback(
